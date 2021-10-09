@@ -3,8 +3,9 @@
 
 
 Game::Game() :
-	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "SFML Game" },
-	m_exitGame{ false }
+	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "AI_Lab_3" },
+	m_exitGame{ false },
+	m_player(0.0f,5.0f,15.0f,0.0f,"ASSETS//IMAGES//tile_0008.png", new InputBehaviour())
 {
 
 }
@@ -67,13 +68,15 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
+
+	m_player.update(t_deltaTime.asSeconds());
 }
 
 
 void Game::render()
 {
 	m_window.clear(sf::Color::White);
-
+	m_window.draw(m_player);
 	m_window.display();
 }
 
