@@ -78,6 +78,9 @@ void Character::rotate(int t_direction, float t_deltaTime)
 {	
 	if(t_direction == -1) setRotation((m_sprite.getRotation() - m_speed * m_rotationSpeed * t_deltaTime));
 	else setRotation((m_sprite.getRotation() + m_speed * m_rotationSpeed * t_deltaTime));
+
+	//thor::rotate(m_visionConeLeft[1], t_angle);
+	//thor::rotate(m_visionConeRight[1], t_angle);
 }
 
 void Character::setSpeed(float t_speed)

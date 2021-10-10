@@ -4,8 +4,8 @@
 
 class ArriveBehaviour : public Behaviour
 {
-	float m_arrivalRadius = 10;
-	float m_slowRadius = 8;
+	float m_arrivalRadius = 40;
+	float m_slowRadius = 100;
 
 private:
 	sf::Vector2f normaliseVector(sf::Vector2f t_vector);

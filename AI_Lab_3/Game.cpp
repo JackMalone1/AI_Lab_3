@@ -12,11 +12,11 @@ Game::Game() :
 		"Arrive Slow"));
 	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new ArriveBehaviour(), &m_font, &m_player, sf::Vector2f(100, 300),10,
 		"Arrive Fast"));
-	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new WanderBehaviour(), &m_font, &m_player, sf::Vector2f(100, 400),10,
+	m_npcs.push_back(Character(5.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new WanderBehaviour(), &m_font, &m_player, sf::Vector2f(100, 400),10,
 		"Wander"));
-	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new SeekBehaviour(), &m_font, &m_player, sf::Vector2f(100, 500),10,
+	m_npcs.push_back(Character(5.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new SeekBehaviour(), &m_font, &m_player, sf::Vector2f(100, 500),10,
 		"Seek"));
-	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new PursueBehaviour(), &m_font, &m_player, sf::Vector2f(100, 600),10,
+	m_npcs.push_back(Character(5.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new PursueBehaviour(), &m_font, &m_player, sf::Vector2f(100, 600),10,
 		"Pursue"));
 }
 
