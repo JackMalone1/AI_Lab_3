@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <vector>
 
 #include "Globals.h"
 
@@ -26,6 +27,14 @@ private:
 	float m_rotationSpeed;
 	float m_minimumSpeed;
 	float m_maximumSpeed;
+
+	std::vector<sf::Vector2f> m_visionConeLeft;
+	std::vector<sf::Vector2f> m_visionConeRight;
+
+	sf::Vector2f m_visionConeDir{ 1,0 };  // Initially point along the x-axis
+	sf::VertexArray m_visionCone{sf::Lines};
+
+	const float c_MAX_SEE_AHEAD = 250.0f;
 public:
 	Character(float t_speed,
 		float t_acceleration,
@@ -54,10 +63,13 @@ public:
 
 	void setSpeed(float t_speed);
 	float getMaxSpeed() { return m_maximumSpeed; }
+
+	std::pair<bool, bool> isCharacterInVisionCone(sf::Vector2f t_characterPosition);
 private:
 	virtual void draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const;
 	void handleBoundaries();
 	void initialiseSprite(std::string t_texturePath);
+	void setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD);
 };
 
 #include "Behaviour.h"

@@ -74,6 +74,11 @@ void Character::setSpeed(float t_speed)
 	if (m_speed < m_minimumSpeed) m_speed = m_minimumSpeed;
 }
 
+std::pair<bool, bool> Character::isCharacterInVisionCone(sf::Vector2f t_characterPosition)
+{
+	return std::pair<bool, bool>();
+}
+
 void Character::draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const
 {
 	t_target.draw(m_sprite, t_states);
@@ -108,4 +113,24 @@ void Character::initialiseSprite(std::string t_texturePath)
 	m_sprite.setScale(sf::Vector2f(4.0f, 4.0f));
 	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2.0f, m_sprite.getGlobalBounds().height / 2.0f);
 	setPosition(m_position);
+}
+
+void Character::setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD)
+{
+	m_visionConeLeft.clear();
+	sf::Vector2f leftPosition = m_sprite.getPosition();
+	m_visionConeDir.x = m_sprite.getPosition().x * cos(-t_angleWidth) - m_sprite.getPosition().y * sin(-t_angleWidth);
+	m_visionConeDir.y = m_sprite.getPosition().x * sin(-t_angleWidth) + m_sprite.getPosition().y * cos(-t_angleWidth);
+	m_visionConeLeft.push_back(leftPosition);
+	m_visionConeLeft.push_back(sf::Vector2f(leftPosition.x + (m_visionConeDir.x * MAX_SEE_AHEAD),
+		leftPosition.y + (m_visionConeDir.y * MAX_SEE_AHEAD)));
+	sf::Vector2f rightPosition = m_sprite.getPosition();
+	m_visionConeDir.x = m_sprite.getPosition().x * cos(t_angleWidth*2) - m_sprite.getPosition().y * sin(t_angleWidth*2);
+	m_visionConeDir.y = m_sprite.getPosition().x * sin(t_angleWidth * 2) + m_sprite.getPosition().y * cos(t_angleWidth * 2);
+	m_visionConeRight.clear();
+	m_visionConeRight.push_back(rightPosition);
+	m_visionConeRight.push_back(sf::Vector2f(rightPosition.x + (m_visionConeDir.x * MAX_SEE_AHEAD),
+		rightPosition.y + (m_visionConeDir.y * MAX_SEE_AHEAD)));
+	m_visionConeDir.x = m_sprite.getPosition().x * cos(-t_angleWidth) - m_sprite.getPosition().y * sin(-t_angleWidth);
+	m_visionConeDir.y = m_sprite.getPosition().x * sin(-t_angleWidth) + m_sprite.getPosition().y * cos(-t_angleWidth);
 }
