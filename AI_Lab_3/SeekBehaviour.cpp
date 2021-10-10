@@ -7,11 +7,11 @@ sf::Vector2f SeekBehaviour::normaliseVector(sf::Vector2f t_vector)
 
 void SeekBehaviour::update(Character* t_character, float t_deltaTime)
 {
-	if (t_character->getTargetPosition() == nullptr) return;//cant seek if there's no target position
+	if (t_character->getTargetCharacter() == nullptr) return;//cant seek if there's no target position
 
-	if (t_character->getPosition() != *t_character->getTargetPosition())
+	if (t_character->getPosition() != t_character->getTargetCharacter()->getPosition())
 	{
-		sf::Vector2f steeringLinear = *t_character->getTargetPosition() - t_character->getPosition();
+		sf::Vector2f steeringLinear = t_character->getTargetCharacter()->getPosition() - t_character->getPosition();
 		steeringLinear = normaliseVector(steeringLinear);
 		steeringLinear *= t_character->getMaxSpeed();
 		t_character->setVelocity(steeringLinear);

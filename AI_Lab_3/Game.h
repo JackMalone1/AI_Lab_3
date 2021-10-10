@@ -3,7 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 #include "InputBehaviour.h"
+#include "ArriveBehaviour.h"
+#include "PursueBehaviour.h"
+#include "SeekBehaviour.h"
+#include "WanderBehaviour.h"
 #include "Character.h"
+#include <vector>
 
 class Game
 {
@@ -23,7 +28,7 @@ private:
 	bool m_exitGame;
 
 	Character m_player;
-	Character m_wander;
+	std::vector<Character> m_npcs;
 };
 
 #endif 

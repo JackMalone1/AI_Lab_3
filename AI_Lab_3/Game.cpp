@@ -7,7 +7,11 @@ Game::Game() :
 	m_exitGame{ false },
 	m_player(0.0f,5.0f,15.0f,0.0f,"ASSETS//IMAGES//tile_0008.png", new InputBehaviour())
 {
-
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new ArriveBehaviour(), &m_player, sf::Vector2f(100, 200),8));
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new ArriveBehaviour(), &m_player, sf::Vector2f(100, 300)));
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new WanderBehaviour(), &m_player, sf::Vector2f(100, 400)));
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new SeekBehaviour(), &m_player, sf::Vector2f(100, 500)));
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new PursueBehaviour(), &m_player, sf::Vector2f(100, 600)));
 }
 
 
@@ -70,6 +74,11 @@ void Game::update(sf::Time t_deltaTime)
 	}
 
 	m_player.update(t_deltaTime.asSeconds());
+
+	for (Character character : m_npcs)
+	{
+		character.update(t_deltaTime.asSeconds());
+	}
 }
 
 
@@ -77,6 +86,11 @@ void Game::render()
 {
 	m_window.clear(sf::Color::White);
 	m_window.draw(m_player);
+	for (Character character : m_npcs)
+	{
+		m_window.draw(character);
+	}
+
 	m_window.display();
 }
 

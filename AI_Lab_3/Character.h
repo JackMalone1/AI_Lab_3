@@ -20,7 +20,7 @@ private:
 	sf::Vector2f m_position;
 	sf::Vector2f m_velocity;
 
-	sf::Vector2f* m_targetPosition;
+	Character* m_targetCharacter;
 
 	float m_speed;
 	float m_acceleration;
@@ -42,12 +42,15 @@ public:
 		float t_rotation,
 		std::string t_texturePath,
 		Behaviour* t_behaviour,
-		sf::Vector2f* t_targetPosition=nullptr);
-	~Character() { if (m_behaviour) delete m_behaviour; }
+		Character* t_targetPosition = nullptr,
+		sf::Vector2f t_position = sf::Vector2f(400.0f, 300.0f),
+		float t_maximumSpeed=10
+		);
+	~Character() {  }
 	virtual void update(float t_deltaTime);
 
 	void setPosition(sf::Vector2f t_newPosition);
-	sf::Vector2f const getPosition() const { return m_sprite.getPosition(); }
+	sf::Vector2f getPosition()  { return m_sprite.getPosition(); }
 
 	void setRotation(float t_newRotation);
 
@@ -59,7 +62,7 @@ public:
 
 	void rotate(int t_direction, float t_deltaTime);
 
-	sf::Vector2f* getTargetPosition() const { return m_targetPosition; }
+	Character* getTargetCharacter() const { return m_targetCharacter; }
 
 	void setSpeed(float t_speed);
 	float getMaxSpeed() { return m_maximumSpeed; }

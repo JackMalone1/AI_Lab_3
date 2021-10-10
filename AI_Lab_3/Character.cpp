@@ -6,16 +6,19 @@ Character::Character(float t_speed,
 	float t_rotation, 
 	std::string t_texturePath,
 	Behaviour* t_behaviour,
-	sf::Vector2f* t_targetPosition) :
+	Character* t_targetPosition,
+	sf::Vector2f t_position,
+	float t_maximumSpeed
+	) :
 	m_speed(t_speed),
 	m_acceleration(t_acceleration),
 	m_rotationSpeed(t_rotationSpeed),
-	m_maximumSpeed(10),
+	m_maximumSpeed(t_maximumSpeed),
 	m_minimumSpeed(-5),
 	m_behaviour(t_behaviour),
-	m_targetPosition(t_targetPosition)
+	m_targetCharacter(t_targetPosition)
 {
-	m_position = sf::Vector2f(400.0f, 300.0f);
+	m_position = t_position;
 	initialiseSprite(t_texturePath);
 	setRotation(t_rotation);
 }
