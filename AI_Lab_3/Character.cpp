@@ -1,12 +1,19 @@
 #include "Character.h"
 
-Character::Character(float t_speed, float t_acceleration, float t_rotationSpeed, float t_rotation, std::string t_texturePath, Behaviour* t_behaviour) :
+Character::Character(float t_speed,
+	float t_acceleration,
+	float t_rotationSpeed,
+	float t_rotation, 
+	std::string t_texturePath,
+	Behaviour* t_behaviour,
+	sf::Vector2f* t_targetPosition) :
 	m_speed(t_speed),
 	m_acceleration(t_acceleration),
 	m_rotationSpeed(t_rotationSpeed),
 	m_maximumSpeed(10),
 	m_minimumSpeed(-5),
-	m_behaviour(t_behaviour)
+	m_behaviour(t_behaviour),
+	m_targetPosition(t_targetPosition)
 {
 	m_position = sf::Vector2f(400.0f, 300.0f);
 	initialiseSprite(t_texturePath);
@@ -15,7 +22,7 @@ Character::Character(float t_speed, float t_acceleration, float t_rotationSpeed,
 
 void Character::update(float t_deltaTime)
 {
-	m_behaviour->update(this, t_deltaTime);
+	if(m_behaviour) m_behaviour->update(this, t_deltaTime);
 	m_sprite.move(sf::Vector2f(m_velocity.x * m_speed, m_velocity.y * m_speed ));
 	m_position = m_sprite.getPosition();
 	handleBoundaries();
@@ -32,6 +39,11 @@ void Character::setRotation(float t_newRotation)
 	m_velocity.x = cosf(t_newRotation * (3.14 / 180.0f));
 	m_velocity.y = sinf(t_newRotation * (3.14 / 180.0f));
 	m_sprite.setRotation(t_newRotation);
+}
+
+void Character::setVelocity(sf::Vector2f t_velocity)
+{
+	m_velocity = t_velocity;
 }
 
 void Character::accelerate(float t_deltaTime)
@@ -52,6 +64,14 @@ void Character::rotate(int t_direction, float t_deltaTime)
 {	
 	if(t_direction == -1) setRotation((m_sprite.getRotation() - m_speed * m_rotationSpeed * t_deltaTime));
 	else setRotation((m_sprite.getRotation() + m_speed * m_rotationSpeed * t_deltaTime));
+}
+
+void Character::setSpeed(float t_speed)
+{
+	m_speed = t_speed;
+
+	if (m_speed > m_maximumSpeed) m_speed = m_maximumSpeed;
+	if (m_speed < m_minimumSpeed) m_speed = m_minimumSpeed;
 }
 
 void Character::draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const
