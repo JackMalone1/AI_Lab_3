@@ -26,7 +26,7 @@ void ArriveBehaviour::update(Character* t_character, float t_deltaTime)
 		sf::Vector2f velocity = steeringLinear;
 		velocity = normaliseVector(velocity);
 		velocity *= t_character->getMaxSpeed();
-		float timeToTarget = 0.1f;
+		float timeToTarget = 20.5f;
 		sf::Vector2f direction = velocity - t_character->getVelocity();
 		direction /= timeToTarget;
 

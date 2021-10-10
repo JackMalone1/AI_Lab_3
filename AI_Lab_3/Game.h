@@ -29,6 +29,7 @@ private:
 
 	Character m_player;
 	std::vector<Character> m_npcs;
+	sf::Font m_font;
 };
 
 #endif 

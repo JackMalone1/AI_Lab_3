@@ -6,9 +6,11 @@ Character::Character(float t_speed,
 	float t_rotation, 
 	std::string t_texturePath,
 	Behaviour* t_behaviour,
+	sf::Font* t_font,
 	Character* t_targetPosition,
 	sf::Vector2f t_position,
-	float t_maximumSpeed
+	float t_maximumSpeed,
+	std::string t_textBox
 	) :
 	m_speed(t_speed),
 	m_acceleration(t_acceleration),
@@ -21,6 +23,14 @@ Character::Character(float t_speed,
 	m_position = t_position;
 	initialiseSprite(t_texturePath);
 	setRotation(t_rotation);
+	if (t_font != nullptr)
+	{
+		m_textBox.setFont(*t_font);
+		m_textBox.setFillColor(sf::Color::Black);
+		m_textBox.setCharacterSize(16);
+		m_textBox.setString(t_textBox);
+		m_textBox.setPosition(m_position);
+	}
 }
 
 void Character::update(float t_deltaTime)
@@ -28,6 +38,7 @@ void Character::update(float t_deltaTime)
 	if(m_behaviour) m_behaviour->update(this, t_deltaTime);
 	m_sprite.move(sf::Vector2f(m_velocity.x * m_speed, m_velocity.y * m_speed ));
 	m_position = m_sprite.getPosition();
+	m_textBox.setPosition(m_position);
 	handleBoundaries();
 }
 
@@ -85,6 +96,8 @@ std::pair<bool, bool> Character::isCharacterInVisionCone(sf::Vector2f t_characte
 void Character::draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const
 {
 	t_target.draw(m_sprite, t_states);
+	std::cout << m_textBox.getString().toAnsiString() << std::endl;
+	if(m_textBox.getString().toAnsiString() != "") t_target.draw(m_textBox, t_states);
 }
 
 void Character::handleBoundaries()

@@ -35,6 +35,9 @@ private:
 	sf::VertexArray m_visionCone{sf::Lines};
 
 	const float c_MAX_SEE_AHEAD = 250.0f;
+
+	sf::Text m_textBox;
+
 public:
 	Character(float t_speed,
 		float t_acceleration,
@@ -42,9 +45,11 @@ public:
 		float t_rotation,
 		std::string t_texturePath,
 		Behaviour* t_behaviour,
+		sf::Font* t_font,
 		Character* t_targetPosition = nullptr,
 		sf::Vector2f t_position = sf::Vector2f(400.0f, 300.0f),
-		float t_maximumSpeed=10
+		float t_maximumSpeed=10,
+		std::string t_textBox=""
 		);
 	~Character() {  }
 	virtual void update(float t_deltaTime);

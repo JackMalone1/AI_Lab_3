@@ -5,13 +5,19 @@
 Game::Game() :
 	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "AI_Lab_3" },
 	m_exitGame{ false },
-	m_player(0.0f,5.0f,15.0f,0.0f,"ASSETS//IMAGES//tile_0008.png", new InputBehaviour())
+	m_player(0.0f,5.0f,15.0f,0.0f,"ASSETS//IMAGES//tile_0008.png", new InputBehaviour(), nullptr)
 {
-	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new ArriveBehaviour(), &m_player, sf::Vector2f(100, 200),8));
-	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new ArriveBehaviour(), &m_player, sf::Vector2f(100, 300)));
-	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new WanderBehaviour(), &m_player, sf::Vector2f(100, 400)));
-	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new SeekBehaviour(), &m_player, sf::Vector2f(100, 500)));
-	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new PursueBehaviour(), &m_player, sf::Vector2f(100, 600)));
+	if (!m_font.loadFromFile("ASSETS//FONTS//ariblk.ttf")) std::cout << "error loading font for text box" << std::endl;
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new ArriveBehaviour(), &m_font, &m_player, sf::Vector2f(100, 200),8,
+		"Arrive Slow"));
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new ArriveBehaviour(), &m_font, &m_player, sf::Vector2f(100, 300),10,
+		"Arrive Fast"));
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new WanderBehaviour(), &m_font, &m_player, sf::Vector2f(100, 400),10,
+		"Wander"));
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new SeekBehaviour(), &m_font, &m_player, sf::Vector2f(100, 500),10,
+		"Seek"));
+	m_npcs.push_back(Character(0.0f, 5.0f, 15.0f, 0.0f, "ASSETS//IMAGES//tile_0007.png", new PursueBehaviour(), &m_font, &m_player, sf::Vector2f(100, 600),10,
+		"Pursue"));
 }
 
 
