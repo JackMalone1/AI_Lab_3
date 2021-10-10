@@ -75,7 +75,7 @@ void Game::update(sf::Time t_deltaTime)
 
 	m_player.update(t_deltaTime.asSeconds());
 
-	for (Character character : m_npcs)
+	for (Character& character : m_npcs)
 	{
 		character.update(t_deltaTime.asSeconds());
 	}
@@ -86,8 +86,9 @@ void Game::render()
 {
 	m_window.clear(sf::Color::White);
 	m_window.draw(m_player);
-	for (Character character : m_npcs)
+	for (Character& character : m_npcs)
 	{
+		character.setTexture();
 		m_window.draw(character);
 	}
 

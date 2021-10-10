@@ -68,6 +68,8 @@ public:
 	float getMaxSpeed() { return m_maximumSpeed; }
 
 	std::pair<bool, bool> isCharacterInVisionCone(sf::Vector2f t_characterPosition);
+
+	void setTexture() { m_sprite.setTexture(m_texture); }
 private:
 	virtual void draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const;
 	void handleBoundaries();
