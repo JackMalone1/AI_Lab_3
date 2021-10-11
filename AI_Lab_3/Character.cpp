@@ -153,3 +153,18 @@ void Character::setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD)
 	m_visionConeDir.x = m_sprite.getPosition().x * cos(-t_angleWidth) - m_sprite.getPosition().y * sin(-t_angleWidth);
 	m_visionConeDir.y = m_sprite.getPosition().x * sin(-t_angleWidth) + m_sprite.getPosition().y * cos(-t_angleWidth);
 }
+
+void Character::updateRotation()
+{
+	m_sprite.setRotation(atan2f(m_velocity.y, m_velocity.x) * (3.14 / 180.0f));
+}
+
+void Character::moveToTarget()
+{
+	if (distance(m_velocity) > m_maximumSpeed * m_maximumSpeed)
+	{
+		m_velocity = normaliseVector(m_velocity) * m_speed;
+	}
+
+	m_velocity = m_targetCharacter->getPosition() * m_speed;
+}

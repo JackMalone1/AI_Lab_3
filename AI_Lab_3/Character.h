@@ -80,6 +80,8 @@ private:
 	void handleBoundaries();
 	void initialiseSprite(std::string t_texturePath);
 	void setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD);
+	void updateRotation();
+	void moveToTarget();
 };
 
 #include "Behaviour.h"
