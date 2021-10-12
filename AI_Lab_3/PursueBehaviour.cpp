@@ -17,16 +17,14 @@ void PursueBehaviour::update(Character* t_character, float t_deltaTime)
 
 	if (t_character->getPosition() != t_character->getTargetCharacter()->getPosition())
 	{
-		sf::Vector2f direction = t_character->getTargetCharacter()->getPosition() - t_character->getPosition();
-		float distance = vectorMagnitude(direction);
-		float speed = vectorMagnitude(t_character->getVelocity());
-		float maxTimePrediction = 2.5f;
-		float timePrediction = 0.0f;
+		sf::Vector2f velocity = t_character->getVelocity();
+		float speed = (velocity.x * velocity.x) + (velocity.y * velocity.y);
 
-		if (speed <= distance / maxTimePrediction) timePrediction = maxTimePrediction;
-		else timePrediction = distance / speed;
+		if (speed == 0) speed = 1;
 
-		sf::Vector2f targetPosition = t_character->getTargetCharacter()->getPosition() + sf::Vector2f(0.0f, 0.0f) * timePrediction;
-		m_seekBehaviour.update(t_character, t_deltaTime);
+		sf::Vector2f pointAheadOfPlayer = (normaliseVector(t_character->getTargetCharacter()->getVelocity()))* vectorMagnitude(t_character->getTargetCharacter()->getPosition()
+			- t_character->getPosition() / speed);
+
+		t_character->moveToTarget(normaliseVector(pointAheadOfPlayer - t_character->getPosition()), t_deltaTime);
 	}
 }

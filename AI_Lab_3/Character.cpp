@@ -16,7 +16,7 @@ Character::Character(float t_speed,
 	m_acceleration(t_acceleration),
 	m_rotationSpeed(t_rotationSpeed),
 	m_maximumSpeed(t_maximumSpeed),
-	m_minimumSpeed(-5),
+	m_minimumSpeed(25),
 	m_behaviour(t_behaviour),
 	m_targetCharacter(t_targetPosition),
 	m_visionConeColour(sf::Color::Red)
@@ -38,26 +38,12 @@ Character::Character(float t_speed,
 void Character::update(float t_deltaTime)
 {
 	if(m_behaviour) m_behaviour->update(this, t_deltaTime);
-	m_sprite.move(sf::Vector2f(m_velocity.x * m_speed, m_velocity.y * m_speed ));
-	m_position = m_sprite.getPosition();
+	m_position += m_velocity * t_deltaTime;
+	m_sprite.setPosition(m_position);
 	m_textBox.setPosition(m_position);
+	updateRotation();
 	handleBoundaries();
-	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2.0f, m_sprite.getGlobalBounds().height / 2.0f);
-	setVisionCone(90, c_MAX_SEE_AHEAD);
-
-	if (m_targetCharacter)
-	{
-		std::pair<bool, bool> result = isCharacterInVisionCone(m_targetCharacter->getPosition());
-		if (!(result.first && result.second) && !(!result.first && !result.second))
-		{
-			m_visionConeColour = sf::Color::Green;
-		}
-		else
-		{
-			m_visionConeColour = sf::Color::Red;
-		}
-	}
-	
+	updateVisionCone();	
 }
 
 void Character::setPosition(sf::Vector2f t_newPosition)
@@ -83,6 +69,7 @@ void Character::accelerate(float t_deltaTime)
 	m_speed += m_acceleration;
 
 	if (m_speed > m_maximumSpeed) m_speed = m_maximumSpeed;
+	m_velocity = normaliseVector(m_velocity) * m_speed;
 }
 
 void Character::decelerate(float t_deltaTime)
@@ -90,6 +77,7 @@ void Character::decelerate(float t_deltaTime)
 	m_speed -= m_acceleration;
 
 	if (m_speed < m_minimumSpeed) m_speed = m_minimumSpeed;
+	m_velocity = normaliseVector(m_velocity) * m_speed;
 }
 
 void Character::rotate(int t_direction, float t_deltaTime)
@@ -118,6 +106,25 @@ bool Character::isPointRight(std::vector<sf::Vector2f> t_visionCone, sf::Vector2
 		- (t_visionCone[1].y - t_visionCone[0].y)
 		* (t_characterPosition.x - t_visionCone[0].x)
 	> 0;
+}
+
+void Character::updateVisionCone()
+{
+	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2.0f, m_sprite.getGlobalBounds().height / 2.0f);
+	setVisionCone(90, c_MAX_SEE_AHEAD);
+
+	if (m_targetCharacter)
+	{
+		std::pair<bool, bool> result = isCharacterInVisionCone(m_targetCharacter->getPosition());
+		if (!(result.first && result.second) && !(!result.first && !result.second))
+		{
+			m_visionConeColour = sf::Color::Green;
+		}
+		else
+		{
+			m_visionConeColour = sf::Color::Red;
+		}
+	}
 }
 
 
@@ -202,15 +209,29 @@ void Character::setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD)
 
 void Character::updateRotation()
 {
-	m_sprite.setRotation(atan2f(m_velocity.y, m_velocity.x) * (3.14 / 180.0f));
+	m_sprite.setRotation(atan2f(m_velocity.y, m_velocity.x));
 }
 
-void Character::moveToTarget()
+void Character::moveToTarget(sf::Vector2f t_target, float t_deltaTime)
 {
 	if (distance(m_velocity) > m_maximumSpeed * m_maximumSpeed)
 	{
-		m_velocity = normaliseVector(m_velocity) * m_speed;
+		m_velocity = normaliseVector(m_velocity) * m_maximumSpeed;
 	}
 
-	m_velocity = m_targetCharacter->getPosition() * m_speed;
+	m_velocity += t_target * m_speed * t_deltaTime;
+}
+
+void Character::turnLeft(float t_deltaTime)
+{
+	m_heading += m_rotationSpeed * t_deltaTime;
+	m_velocity = sf::Vector2f(cosf(m_heading), sinf(m_heading)) * m_speed;
+	updateRotation();
+}
+
+void Character::turnRight(float t_deltaTime)
+{
+	m_heading -= m_rotationSpeed * t_deltaTime;
+	m_velocity = sf::Vector2f(cosf(m_heading), sinf(m_heading)) * m_speed;
+	updateRotation();
 }

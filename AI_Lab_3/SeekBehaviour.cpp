@@ -11,8 +11,6 @@ void SeekBehaviour::update(Character* t_character, float t_deltaTime)
 
 	if (t_character->getPosition() != t_character->getTargetCharacter()->getPosition())
 	{
-		sf::Vector2f distance = t_character->getTargetCharacter()->getPosition() - t_character->getPosition();
-		distance = normaliseVector(distance);
-		t_character->setRotation(atan2f(distance.y, distance.x) * (180 / 3.14f));
+		t_character->moveToTarget(normaliseVector(t_character->getTargetCharacter()->getPosition() - t_character->getPosition()), t_deltaTime);
 	}
 }

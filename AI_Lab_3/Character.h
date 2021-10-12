@@ -27,6 +27,7 @@ private:
 	float m_rotationSpeed;
 	float m_minimumSpeed;
 	float m_maximumSpeed;
+	float m_heading;
 
 	std::vector<sf::Vector2f> m_visionConeLeft;
 	std::vector<sf::Vector2f> m_visionConeRight;
@@ -48,7 +49,7 @@ public:
 		sf::Font* t_font,
 		Character* t_targetPosition = nullptr,
 		sf::Vector2f t_position = sf::Vector2f(400.0f, 300.0f),
-		float t_maximumSpeed=10,
+		float t_maximumSpeed=150,
 		std::string t_textBox=""
 		);
 	~Character() {  }
@@ -75,14 +76,19 @@ public:
 	std::pair<bool, bool> isCharacterInVisionCone(sf::Vector2f t_characterPosition);
 
 	void setTexture() { m_sprite.setTexture(m_texture); }
+	void moveToTarget(sf::Vector2f t_target, float t_deltaTime);
+
+	void turnLeft(float t_deltaTime);
+	void turnRight(float t_deltaTime);
 private:
 	virtual void draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const;
 	void handleBoundaries();
 	void initialiseSprite(std::string t_texturePath);
 	void setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD);
 	void updateRotation();
-	void moveToTarget();
+
 	bool isPointRight(std::vector<sf::Vector2f> t_visionCone, sf::Vector2f t_characterPosition);
+	void updateVisionCone();
 };
 
 #include "Behaviour.h"
