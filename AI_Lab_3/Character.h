@@ -34,10 +34,10 @@ private:
 	sf::Vector2f m_visionConeDir{ 1,0 };  // Initially point along the x-axis
 	sf::VertexArray m_visionCone{sf::Lines};
 
-	const float c_MAX_SEE_AHEAD = 250.0f;
+	const float c_MAX_SEE_AHEAD = 50.0f;
 
 	sf::Text m_textBox;
-
+	sf::Color m_visionConeColour;
 public:
 	Character(float t_speed,
 		float t_acceleration,
@@ -82,6 +82,7 @@ private:
 	void setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD);
 	void updateRotation();
 	void moveToTarget();
+	bool isPointRight(std::vector<sf::Vector2f> t_visionCone, sf::Vector2f t_characterPosition);
 };
 
 #include "Behaviour.h"
