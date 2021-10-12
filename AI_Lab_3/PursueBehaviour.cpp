@@ -22,7 +22,7 @@ void PursueBehaviour::update(Character* t_character, float t_deltaTime)
 
 		if (speed == 0) speed = 1;
 
-		sf::Vector2f pointAheadOfPlayer = (normaliseVector(t_character->getTargetCharacter()->getVelocity()))* vectorMagnitude(t_character->getTargetCharacter()->getPosition()
+		sf::Vector2f pointAheadOfPlayer = (normaliseVector(t_character->getTargetCharacter()->getVelocity())) * vectorMagnitude(t_character->getTargetCharacter()->getPosition()
 			- t_character->getPosition() / speed);
 
 		t_character->moveToTarget(normaliseVector(pointAheadOfPlayer - t_character->getPosition()), t_deltaTime);

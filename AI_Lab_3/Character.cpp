@@ -10,7 +10,8 @@ Character::Character(float t_speed,
 	Character* t_targetPosition,
 	sf::Vector2f t_position,
 	float t_maximumSpeed,
-	std::string t_textBox
+	std::string t_textBox,
+	bool t_isEnabled
 	) :
 	m_speed(t_speed),
 	m_acceleration(t_acceleration),
@@ -19,7 +20,8 @@ Character::Character(float t_speed,
 	m_minimumSpeed(25),
 	m_behaviour(t_behaviour),
 	m_targetCharacter(t_targetPosition),
-	m_visionConeColour(sf::Color::Red)
+	m_visionConeColour(sf::Color::Red),
+	m_isEnabled(t_isEnabled)
 {
 	m_position = t_position;
 	initialiseSprite(t_texturePath);
@@ -151,6 +153,8 @@ void Character::draw(sf::RenderTarget& t_target, sf::RenderStates t_states) cons
 	visionCone.append(sf::Vertex(m_visionConeLeft[1], m_visionConeColour));
 	visionCone.append(sf::Vertex(m_visionConeRight[0], m_visionConeColour));
 	visionCone.append(sf::Vertex(m_visionConeRight[1], m_visionConeColour));
+	visionCone.append(sf::Vertex(m_visionConeLeft[1], m_visionConeColour));
+	visionCone.append(sf::Vertex(m_visionConeRight[1], m_visionConeColour));
 	visionCone.append(sf::Vertex(m_visionConeDir, m_visionConeColour));
 	t_target.draw(visionCone, t_states);
 	if(m_textBox.getString().toAnsiString() != "") t_target.draw(m_textBox, t_states);
@@ -210,6 +214,11 @@ void Character::setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD)
 void Character::updateRotation()
 {
 	m_sprite.setRotation(atan2f(m_velocity.y, m_velocity.x));
+	m_visionConeLeft.at(1).x = m_visionConeLeft.at(1).x * cos(m_rotationSpeed) - m_visionConeLeft.at(1).y * sin(m_rotationSpeed) * (3.14 / 180.0f);
+	m_visionConeLeft.at(1).y = m_visionConeLeft.at(1).x * sin(m_rotationSpeed) + m_visionConeLeft.at(1).y * cos(m_rotationSpeed) * (3.14 / 180.0f);
+
+	m_visionConeRight.at(1).x = m_visionConeRight.at(1).x * cos(m_rotationSpeed) - m_visionConeRight.at(1).y * sin(m_rotationSpeed) * (3.14 / 180.0f);
+	m_visionConeRight.at(1).y = m_visionConeRight.at(1).x * sin(m_rotationSpeed) + m_visionConeRight.at(1).y * cos(m_rotationSpeed) * (3.14 / 180.0f);
 }
 
 void Character::moveToTarget(sf::Vector2f t_target, float t_deltaTime)

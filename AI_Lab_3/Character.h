@@ -39,6 +39,8 @@ private:
 
 	sf::Text m_textBox;
 	sf::Color m_visionConeColour;
+
+	bool m_isEnabled;
 public:
 	Character(float t_speed,
 		float t_acceleration,
@@ -50,7 +52,8 @@ public:
 		Character* t_targetPosition = nullptr,
 		sf::Vector2f t_position = sf::Vector2f(400.0f, 300.0f),
 		float t_maximumSpeed=150,
-		std::string t_textBox=""
+		std::string t_textBox="",
+		bool t_isEnabled=true
 		);
 	~Character() {  }
 	virtual void update(float t_deltaTime);
@@ -80,6 +83,9 @@ public:
 
 	void turnLeft(float t_deltaTime);
 	void turnRight(float t_deltaTime);
+
+	void setEnabled(bool t_enabled) { m_isEnabled = t_enabled; }
+	bool isEnabled() { return m_isEnabled; }
 private:
 	virtual void draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const;
 	void handleBoundaries();
