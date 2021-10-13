@@ -65,15 +65,10 @@ public:
 	void setPosition(sf::Vector2f t_newPosition);
 	sf::Vector2f getPosition()  { return m_sprite.getPosition(); }
 
-	void setRotation(float t_newRotation);
-
 	sf::Vector2f const getVelocity() const { return m_velocity; }
-	void setVelocity(sf::Vector2f t_velocity);
 
 	void accelerate(float t_deltaTime);
 	void decelerate(float t_deltaTime);
-
-	void rotate(int t_direction, float t_deltaTime);
 
 	Character* getTargetCharacter() const { return m_targetCharacter; }
 

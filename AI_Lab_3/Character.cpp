@@ -17,15 +17,16 @@ Character::Character(float t_speed,
 	m_acceleration(t_acceleration),
 	m_rotationSpeed(t_rotationSpeed),
 	m_maximumSpeed(t_maximumSpeed),
-	m_minimumSpeed(25),
+	m_minimumSpeed(25.0f),
 	m_behaviour(t_behaviour),
 	m_targetCharacter(t_targetPosition),
 	m_visionConeColour(sf::Color::Red),
-	m_isEnabled(t_isEnabled)
+	m_isEnabled(t_isEnabled),
+	m_heading(0)
 {
 	m_position = t_position;
 	initialiseSprite(t_texturePath);
-	setRotation(t_rotation);
+	m_velocity = sf::Vector2f(1.0f, 1.0f);
 	if (t_font != nullptr)
 	{
 		m_textBox.setFont(*t_font);
@@ -56,17 +57,6 @@ void Character::setPosition(sf::Vector2f t_newPosition)
 	m_sprite.setPosition(m_position);
 }
 
-void Character::setRotation(float t_newRotation)
-{
-	m_velocity.x = cosf(t_newRotation * (3.14 / 180.0f));
-	m_velocity.y = sinf(t_newRotation * (3.14 / 180.0f));
-	m_sprite.setRotation(t_newRotation);
-}
-
-void Character::setVelocity(sf::Vector2f t_velocity)
-{
-	m_velocity = t_velocity;
-}
 
 void Character::accelerate(float t_deltaTime)
 {
@@ -84,16 +74,7 @@ void Character::decelerate(float t_deltaTime)
 	m_velocity = normaliseVector(m_velocity) * m_speed;
 }
 
-void Character::rotate(int t_direction, float t_deltaTime)
-{	
-	if(t_direction == -1) setRotation((m_sprite.getRotation() - m_speed * m_rotationSpeed * t_deltaTime));
-	else setRotation((m_sprite.getRotation() + m_speed * m_rotationSpeed * t_deltaTime));
-	m_visionConeLeft.at(1).x = m_visionConeLeft.at(1).x * cos(m_rotationSpeed) - m_visionConeLeft.at(1).y * sin(m_rotationSpeed) * (3.14 / 180.0f);
-	m_visionConeLeft.at(1).y = m_visionConeLeft.at(1).x * sin(m_rotationSpeed) + m_visionConeLeft.at(1).y * cos(m_rotationSpeed) * (3.14 / 180.0f);
 
-	m_visionConeRight.at(1).x = m_visionConeRight.at(1).x * cos(m_rotationSpeed) - m_visionConeRight.at(1).y * sin(m_rotationSpeed) * (3.14 / 180.0f);
-	m_visionConeRight.at(1).y = m_visionConeRight.at(1).x * sin(m_rotationSpeed) + m_visionConeRight.at(1).y * cos(m_rotationSpeed) * (3.14 / 180.0f);
-}
 
 void Character::setSpeed(float t_speed)
 {
@@ -189,9 +170,9 @@ void Character::initialiseSprite(std::string t_texturePath)
 {
 	if (!m_texture.loadFromFile(t_texturePath)) std::cout << "Problem loading texture" << std::endl;
 	m_sprite.setTexture(m_texture);
-	m_sprite.setScale(sf::Vector2f(4.0f, 4.0f));
 	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2.0f, m_sprite.getGlobalBounds().height / 2.0f);
 	setPosition(m_position);
+	updateRotation();
 }
 
 void Character::setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD)
@@ -216,12 +197,7 @@ void Character::setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD)
 
 void Character::updateRotation()
 {
-	m_sprite.setRotation(atan2f(m_velocity.y, m_velocity.x) * (3.14 / 180.0f));
-	m_visionConeLeft.at(1).x = m_visionConeLeft.at(1).x * cos(m_rotationSpeed) - m_visionConeLeft.at(1).y * sin(m_rotationSpeed) * (3.14 / 180.0f);
-	m_visionConeLeft.at(1).y = m_visionConeLeft.at(1).x * sin(m_rotationSpeed) + m_visionConeLeft.at(1).y * cos(m_rotationSpeed) * (3.14 / 180.0f);
-
-	m_visionConeRight.at(1).x = m_visionConeRight.at(1).x * cos(m_rotationSpeed) - m_visionConeRight.at(1).y * sin(m_rotationSpeed) * (3.14 / 180.0f);
-	m_visionConeRight.at(1).y = m_visionConeRight.at(1).x * sin(m_rotationSpeed) + m_visionConeRight.at(1).y * cos(m_rotationSpeed) * (3.14 / 180.0f);
+	m_sprite.setRotation(atan2f(m_velocity.y, m_velocity.x) * (180.0f / 3.14));
 }
 
 void Character::moveToTarget(sf::Vector2f t_target, float t_deltaTime)
@@ -236,14 +212,14 @@ void Character::moveToTarget(sf::Vector2f t_target, float t_deltaTime)
 
 void Character::turnLeft(float t_deltaTime)
 {
-	m_heading += m_rotationSpeed * t_deltaTime;
+	m_heading -= m_rotationSpeed * t_deltaTime;
 	m_velocity = sf::Vector2f(cosf(m_heading), sinf(m_heading)) * m_speed;
 	updateRotation();
 }
 
 void Character::turnRight(float t_deltaTime)
 {
-	m_heading -= m_rotationSpeed * t_deltaTime;
+	m_heading += m_rotationSpeed * t_deltaTime;
 	m_velocity = sf::Vector2f(cosf(m_heading), sinf(m_heading)) * m_speed;
 	updateRotation();
 }

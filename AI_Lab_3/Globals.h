@@ -17,6 +17,8 @@ static float vectorMagnitude(sf::Vector2f t_vector)
 
 static sf::Vector2f normaliseVector(sf::Vector2f t_vector)
 {
-	return t_vector / vectorMagnitude(t_vector);
+	float magnitude = vectorMagnitude(t_vector);
+	if (magnitude > 0) return t_vector / magnitude;
+	return t_vector;
 }
 
