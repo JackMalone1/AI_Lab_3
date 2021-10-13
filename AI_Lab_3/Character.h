@@ -41,6 +41,10 @@ private:
 	sf::Color m_visionConeColour;
 
 	bool m_isEnabled;
+
+	sf::CircleShape m_targetPositionCircle;
+
+	bool m_useTargetCircle = false;
 public:
 	Character(float t_speed,
 		float t_acceleration,
@@ -86,6 +90,12 @@ public:
 
 	void setEnabled(bool t_enabled) { m_isEnabled = t_enabled; }
 	bool isEnabled() { return m_isEnabled; }
+
+	sf::CircleShape getTargetCircle() { return m_targetPositionCircle; }
+	void setTargetCirclePosition(sf::Vector2f t_vector) { m_targetPositionCircle.setPosition(t_vector); }
+
+	void useCircleTarget(bool t_useCircle) { m_useTargetCircle = t_useCircle; }
+	bool getCircleTarget() { return m_useTargetCircle; }
 private:
 	virtual void draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const;
 	void handleBoundaries();

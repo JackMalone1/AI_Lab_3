@@ -13,6 +13,8 @@ float PursueBehaviour::vectorMagnitude(sf::Vector2f t_vector)
 
 void PursueBehaviour::update(Character* t_character, float t_deltaTime)
 {
+	if (t_character->getCircleTarget() == false) t_character->useCircleTarget(true);
+
 	if (t_character->getTargetCharacter() == nullptr) return;
 
 	if (t_character->getPosition() != t_character->getTargetCharacter()->getPosition())
@@ -23,8 +25,9 @@ void PursueBehaviour::update(Character* t_character, float t_deltaTime)
 		if (speed == 0) speed = 1;
 
 		sf::Vector2f pointAheadOfPlayer = (normaliseVector(t_character->getTargetCharacter()->getVelocity())) * vectorMagnitude(t_character->getTargetCharacter()->getPosition()
-			- t_character->getPosition() / speed);
+			- t_character->getPosition()) / speed + t_character->getTargetCharacter()->getPosition();
 
 		t_character->moveToTarget(normaliseVector(pointAheadOfPlayer - t_character->getPosition()), t_deltaTime);
+		t_character->setTargetCirclePosition(pointAheadOfPlayer);
 	}
 }

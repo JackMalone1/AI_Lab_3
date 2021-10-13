@@ -35,6 +35,8 @@ Character::Character(float t_speed,
 		m_textBox.setPosition(m_position);
 	}
 	setVisionCone(90, c_MAX_SEE_AHEAD);
+	m_targetPositionCircle.setFillColor(sf::Color::Red);
+	m_targetPositionCircle.setRadius(20);
 }
 
 void Character::update(float t_deltaTime)
@@ -157,6 +159,7 @@ void Character::draw(sf::RenderTarget& t_target, sf::RenderStates t_states) cons
 	visionCone.append(sf::Vertex(m_visionConeRight[1], m_visionConeColour));
 	visionCone.append(sf::Vertex(m_visionConeDir, m_visionConeColour));
 	t_target.draw(visionCone, t_states);
+	if (m_useTargetCircle) t_target.draw(m_targetPositionCircle, t_states);
 	if(m_textBox.getString().toAnsiString() != "") t_target.draw(m_textBox, t_states);
 }
 
@@ -213,7 +216,7 @@ void Character::setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD)
 
 void Character::updateRotation()
 {
-	m_sprite.setRotation(atan2f(m_velocity.y, m_velocity.x));
+	m_sprite.setRotation(atan2f(m_velocity.y, m_velocity.x) * (3.14 / 180.0f));
 	m_visionConeLeft.at(1).x = m_visionConeLeft.at(1).x * cos(m_rotationSpeed) - m_visionConeLeft.at(1).y * sin(m_rotationSpeed) * (3.14 / 180.0f);
 	m_visionConeLeft.at(1).y = m_visionConeLeft.at(1).x * sin(m_rotationSpeed) + m_visionConeLeft.at(1).y * cos(m_rotationSpeed) * (3.14 / 180.0f);
 
