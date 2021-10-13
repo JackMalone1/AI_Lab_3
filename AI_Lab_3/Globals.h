@@ -6,7 +6,7 @@ const int WINDOW_HEIGHT = 600;
 
 static float distance(sf::Vector2f vector)
 {
-	return (vector.x * vector.x) * (vector.y * vector.y);
+	return (vector.x * vector.x) + (vector.y * vector.y);
 }
 
 static float vectorMagnitude(sf::Vector2f t_vector)
