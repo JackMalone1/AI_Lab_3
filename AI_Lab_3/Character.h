@@ -22,7 +22,7 @@ private:
 
 	Character* m_targetCharacter;
 
-	float m_speed;
+	float m_speed = 0.01f;
 	float m_acceleration;
 	float m_rotationSpeed;
 	float m_minimumSpeed;
@@ -31,9 +31,6 @@ private:
 
 	std::vector<sf::Vector2f> m_visionConeLeft;
 	std::vector<sf::Vector2f> m_visionConeRight;
-
-	sf::Vector2f m_visionConeDir{ 1,0 };  // Initially point along the x-axis
-	sf::VertexArray m_visionCone{sf::Lines};
 
 	const float c_MAX_SEE_AHEAD = 50.0f;
 
@@ -45,6 +42,10 @@ private:
 	sf::CircleShape m_targetPositionCircle;
 
 	bool m_useTargetCircle = false;
+	float m_visionConeDistance;
+	sf::VertexArray m_cone = sf::VertexArray{ sf::TriangleFan, 3 };
+	sf::Vector2f minVec;
+	sf::Vector2f maxVec;
 public:
 	Character(float t_speed,
 		float t_acceleration,
@@ -75,7 +76,7 @@ public:
 	void setSpeed(float t_speed);
 	float getMaxSpeed() { return m_maximumSpeed; }
 
-	std::pair<bool, bool> isCharacterInVisionCone(sf::Vector2f t_characterPosition);
+	bool isCharacterInVisionCone(sf::Vector2f t_characterPosition);
 
 	void setTexture() { m_sprite.setTexture(m_texture); }
 	void moveToTarget(sf::Vector2f t_target, float t_deltaTime);
@@ -95,11 +96,10 @@ private:
 	virtual void draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const;
 	void handleBoundaries();
 	void initialiseSprite(std::string t_texturePath);
-	void setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD);
+	void setVisionCone();
 	void updateRotation();
-
-	bool isPointRight(std::vector<sf::Vector2f> t_visionCone, sf::Vector2f t_characterPosition);
 	void updateVisionCone();
+	void drawVisionCone();
 };
 
 #include "Behaviour.h"

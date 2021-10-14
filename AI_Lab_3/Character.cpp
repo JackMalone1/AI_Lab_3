@@ -17,12 +17,13 @@ Character::Character(float t_speed,
 	m_acceleration(t_acceleration),
 	m_rotationSpeed(t_rotationSpeed),
 	m_maximumSpeed(t_maximumSpeed),
-	m_minimumSpeed(25.0f),
+	m_minimumSpeed(0.1f),
 	m_behaviour(t_behaviour),
 	m_targetCharacter(t_targetPosition),
 	m_visionConeColour(sf::Color::Red),
 	m_isEnabled(t_isEnabled),
-	m_heading(0)
+	m_heading(0),
+	m_visionConeDistance(200)
 {
 	m_position = t_position;
 	initialiseSprite(t_texturePath);
@@ -30,12 +31,12 @@ Character::Character(float t_speed,
 	if (t_font != nullptr)
 	{
 		m_textBox.setFont(*t_font);
-		m_textBox.setFillColor(sf::Color::Black);
+		m_textBox.setFillColor(sf::Color::White);
 		m_textBox.setCharacterSize(16);
 		m_textBox.setString(t_textBox);
 		m_textBox.setPosition(m_position);
 	}
-	setVisionCone(90, c_MAX_SEE_AHEAD);
+	setVisionCone();
 	m_targetPositionCircle.setFillColor(sf::Color::Red);
 	m_targetPositionCircle.setRadius(20);
 }
@@ -84,62 +85,65 @@ void Character::setSpeed(float t_speed)
 	if (m_speed < m_minimumSpeed) m_speed = m_minimumSpeed;
 }
 
-bool Character::isPointRight(std::vector<sf::Vector2f> t_visionCone, sf::Vector2f t_characterPosition)
-{
-	return (t_visionCone[1].x - t_visionCone[0].x)
-		* (t_characterPosition.y - t_visionCone[0].y)
-		- (t_visionCone[1].y - t_visionCone[0].y)
-		* (t_characterPosition.x - t_visionCone[0].x)
-	> 0;
-}
+
 
 void Character::updateVisionCone()
 {
 	m_sprite.setOrigin(m_sprite.getGlobalBounds().width / 2.0f, m_sprite.getGlobalBounds().height / 2.0f);
-	setVisionCone(90, c_MAX_SEE_AHEAD);
+	setVisionCone();
 
 	if (m_targetCharacter)
 	{
-		std::pair<bool, bool> result = isCharacterInVisionCone(m_targetCharacter->getPosition());
-		if (!(result.first && result.second) && !(!result.first && !result.second))
+		bool result = isCharacterInVisionCone(m_targetCharacter->getPosition());
+		if (result)
 		{
-			m_visionConeColour = sf::Color::Green;
+			m_visionConeColour = sf::Color(0,255,0,125);
 		}
 		else
 		{
-			m_visionConeColour = sf::Color::Red;
+			m_visionConeColour = sf::Color(255, 0, 0, 125);
 		}
+		drawVisionCone();
+	}
+}
+
+void Character::drawVisionCone()
+{
+	m_cone.clear();
+	m_cone.append(sf::Vertex(m_sprite.getPosition(), m_visionConeColour));
+	float visionConeAngle = 50 * 3.14 / 180.0f;
+	float min = atan2f(m_velocity.y, m_velocity.x) - visionConeAngle;
+	float max = atan2f(m_velocity.y, m_velocity.x) + visionConeAngle;
+	for (float a = min; a < max; a += 5 * (3.14 / 180.0f))
+	{
+		m_cone.append(sf::Vertex{ sf::Vector2f(cosf(a) * m_visionConeDistance, sinf(a) * m_visionConeDistance) + m_position, m_visionConeColour });
 	}
 }
 
 
-std::pair<bool, bool> Character::isCharacterInVisionCone(sf::Vector2f t_characterPosition)
+bool Character::isCharacterInVisionCone(sf::Vector2f t_characterPosition)
 {
-	bool isPlayerLeft = false;
-	bool isPlayerRight = false;
-	if (!isPointRight(m_visionConeRight, t_characterPosition))
+	float minCross = (minVec.x * (m_targetCharacter->getPosition() - getPosition()).y) - (minVec.y * (m_targetCharacter->getPosition() - getPosition()).x);
+	float maxCross = (maxVec.x * (m_targetCharacter->getPosition() - getPosition()).y) - (maxVec.y * (m_targetCharacter->getPosition() - getPosition()).x);
+
+	sf::Vector2f distVec = m_targetCharacter->getPosition() - getPosition();
+
+	if (minCross > 0 && maxCross < 0)
 	{
-		isPlayerRight = true;
+
+		if (((distVec.x * distVec.x) + (distVec.y * distVec.y)) < m_visionConeDistance * m_visionConeDistance)
+		{
+			return true;
+		}
 	}
-	if (isPointRight(m_visionConeLeft, t_characterPosition))
-	{
-		isPlayerLeft = true;
-	}
-	return std::pair<bool, bool>(isPlayerLeft, isPlayerRight);
+	return false;
 }
 
 void Character::draw(sf::RenderTarget& t_target, sf::RenderStates t_states) const
 {
 	t_target.draw(m_sprite, t_states);
-	sf::VertexArray visionCone(sf::Lines);
-	visionCone.append(sf::Vertex(m_visionConeLeft[0], m_visionConeColour));
-	visionCone.append(sf::Vertex(m_visionConeLeft[1], m_visionConeColour));
-	visionCone.append(sf::Vertex(m_visionConeRight[0], m_visionConeColour));
-	visionCone.append(sf::Vertex(m_visionConeRight[1], m_visionConeColour));
-	visionCone.append(sf::Vertex(m_visionConeLeft[1], m_visionConeColour));
-	visionCone.append(sf::Vertex(m_visionConeRight[1], m_visionConeColour));
-	visionCone.append(sf::Vertex(m_visionConeDir, m_visionConeColour));
-	t_target.draw(visionCone, t_states);
+
+	t_target.draw(m_cone, t_states);
 	if (m_useTargetCircle) t_target.draw(m_targetPositionCircle, t_states);
 	if(m_textBox.getString().toAnsiString() != "") t_target.draw(m_textBox, t_states);
 }
@@ -175,24 +179,14 @@ void Character::initialiseSprite(std::string t_texturePath)
 	updateRotation();
 }
 
-void Character::setVisionCone(float t_angleWidth, float const MAX_SEE_AHEAD)
+void Character::setVisionCone()
 {
-	m_visionConeLeft.clear();
-	sf::Vector2f leftPosition = m_sprite.getPosition();
-	m_visionConeDir.x = m_sprite.getPosition().x * cos(-t_angleWidth) - m_sprite.getPosition().y * sin(-t_angleWidth);
-	m_visionConeDir.y = m_sprite.getPosition().x * sin(-t_angleWidth) + m_sprite.getPosition().y * cos(-t_angleWidth);
-	m_visionConeLeft.push_back(leftPosition);
-	m_visionConeLeft.push_back(sf::Vector2f(leftPosition.x + (m_visionConeDir.x * MAX_SEE_AHEAD),
-		leftPosition.y + (m_visionConeDir.y * MAX_SEE_AHEAD)));
-	sf::Vector2f rightPosition = m_sprite.getPosition();
-	m_visionConeDir.x = m_sprite.getPosition().x * cos(t_angleWidth*2) - m_sprite.getPosition().y * sin(t_angleWidth*2);
-	m_visionConeDir.y = m_sprite.getPosition().x * sin(t_angleWidth * 2) + m_sprite.getPosition().y * cos(t_angleWidth * 2);
-	m_visionConeRight.clear();
-	m_visionConeRight.push_back(rightPosition);
-	m_visionConeRight.push_back(sf::Vector2f(rightPosition.x + (m_visionConeDir.x * MAX_SEE_AHEAD),
-		rightPosition.y + (m_visionConeDir.y * MAX_SEE_AHEAD)));
-	m_visionConeDir.x = m_sprite.getPosition().x * cos(-t_angleWidth) - m_sprite.getPosition().y * sin(-t_angleWidth);
-	m_visionConeDir.y = m_sprite.getPosition().x * sin(-t_angleWidth) + m_sprite.getPosition().y * cos(-t_angleWidth);
+	float visionConeAngle = 50 * 3.14 / 180.0f;
+	float min = atan2f(m_velocity.y, m_velocity.x) - visionConeAngle;
+	float max = atan2f(m_velocity.y, m_velocity.x) + visionConeAngle;
+
+	minVec = sf::Vector2f(cosf(min), sinf(min));
+	maxVec = sf::Vector2f(cosf(max), sinf(max));
 }
 
 void Character::updateRotation()

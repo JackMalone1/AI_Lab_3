@@ -8,10 +8,10 @@ Game::Game() :
 	m_player(0.0f,35.0f,90.0f * (3.14 / 180.0f),0.0f,"ASSETS//IMAGES//ship1.png", new InputBehaviour(), nullptr)
 {
 	if (!m_font.loadFromFile("ASSETS//FONTS//ariblk.ttf")) std::cout << "error loading font for text box" << std::endl;
-	m_npcs.push_back(Character(0.0f, 45.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new ArriveBehaviour(),
+	m_npcs.push_back(Character(0.01f, 45.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new ArriveBehaviour(),
 		&m_font, &m_player, sf::Vector2f(100, 200),150,
 		"Arrive Slow", false));
-	m_npcs.push_back(Character(0.0f, 90.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new ArriveBehaviour(),
+	m_npcs.push_back(Character(0.01f, 90.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new ArriveBehaviour(),
 		&m_font, &m_player, sf::Vector2f(100, 300),350,
 		"Arrive Fast", false));
 	m_npcs.push_back(Character(70.0f, 35.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new WanderBehaviour(&m_player),
@@ -101,7 +101,7 @@ void Game::update(sf::Time t_deltaTime)
 
 void Game::render()
 {
-	m_window.clear(sf::Color::White);
+	m_window.clear(sf::Color::Black);
 	m_window.draw(m_player);
 	for (Character& character : m_npcs)
 	{

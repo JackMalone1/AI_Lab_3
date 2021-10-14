@@ -24,7 +24,7 @@ void ArriveBehaviour::update(Character* t_character, float t_deltaTime)
 		else t_character->setSpeed(t_character->getMaxSpeed() * (magnitude / m_slowRadius));
 	
 		if (magnitude < m_arrivalRadius) 
-			t_character->moveToTarget(normaliseVector(t_character->getTargetCharacter()->getPosition() - t_character->getPosition()) / 100.0f, t_deltaTime);
+			t_character->moveToTarget(normaliseVector(t_character->getTargetCharacter()->getPosition() - t_character->getPosition()) , t_deltaTime);
 		else
 			t_character->moveToTarget(normaliseVector(t_character->getTargetCharacter()->getPosition() - t_character->getPosition()), t_deltaTime);
 	}
