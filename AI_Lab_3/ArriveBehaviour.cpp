@@ -19,12 +19,15 @@ void ArriveBehaviour::update(Character* t_character, float t_deltaTime)
 		sf::Vector2f steeringLinear = t_character->getTargetCharacter()->getPosition() - t_character->getPosition();
 		float magnitude = sqrt((steeringLinear.x * steeringLinear.x) + (steeringLinear.y * steeringLinear.y));
 
-		if (magnitude < m_arrivalRadius) t_character->setSpeed(0.0f);		
-		else if (magnitude > m_slowRadius) t_character->setSpeed(t_character->getMaxSpeed());
-		else t_character->setSpeed(t_character->getMaxSpeed() * (magnitude / m_slowRadius));
+		if (magnitude < m_arrivalRadius)
+			t_character->setMaxSpeed(0.001f);		
+		else if (magnitude > m_slowRadius)
+			t_character->setMaxSpeed(t_character->getOriginalMaxSpeed());
+		else
+			t_character->setMaxSpeed(t_character->getOriginalMaxSpeed() * magnitude / m_slowRadius);
 	
 		if (magnitude < m_arrivalRadius) 
-			t_character->moveToTarget(normaliseVector(t_character->getTargetCharacter()->getPosition() - t_character->getPosition()) , t_deltaTime);
+			t_character->moveToTarget(normaliseVector(t_character->getTargetCharacter()->getPosition() - t_character->getPosition() / 100.0f) , t_deltaTime);
 		else
 			t_character->moveToTarget(normaliseVector(t_character->getTargetCharacter()->getPosition() - t_character->getPosition()), t_deltaTime);
 	}

@@ -4,7 +4,7 @@
 
 class ArriveBehaviour : public Behaviour
 {
-	float m_arrivalRadius = 150;
+	float m_arrivalRadius = 100;
 	float m_slowRadius = 300;
 
 private:

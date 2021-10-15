@@ -27,6 +27,7 @@ private:
 	float m_rotationSpeed;
 	float m_minimumSpeed;
 	float m_maximumSpeed;
+	float m_originalMaxSpeed;
 	float m_heading;
 
 	std::vector<sf::Vector2f> m_visionConeLeft;
@@ -56,15 +57,15 @@ public:
 		sf::Font* t_font,
 		Character* t_targetPosition = nullptr,
 		sf::Vector2f t_position = sf::Vector2f(400.0f, 300.0f),
-		float t_maximumSpeed=150,
-		std::string t_textBox="",
-		bool t_isEnabled=true
-		);
+		float t_maximumSpeed = 350,
+		std::string t_textBox = "",
+		bool t_isEnabled = true
+	);
 	~Character() {  }
 	virtual void update(float t_deltaTime);
 
 	void setPosition(sf::Vector2f t_newPosition);
-	sf::Vector2f getPosition()  { return m_sprite.getPosition(); }
+	sf::Vector2f getPosition() { return m_sprite.getPosition(); }
 
 	sf::Vector2f const getVelocity() const { return m_velocity; }
 
@@ -74,7 +75,9 @@ public:
 	Character* getTargetCharacter() const { return m_targetCharacter; }
 
 	void setSpeed(float t_speed);
+	void setMaxSpeed(float t_maxSpeed) { m_maximumSpeed = t_maxSpeed; }
 	float getMaxSpeed() { return m_maximumSpeed; }
+	float getOriginalMaxSpeed() { return m_originalMaxSpeed; }
 
 	bool isCharacterInVisionCone(sf::Vector2f t_characterPosition);
 

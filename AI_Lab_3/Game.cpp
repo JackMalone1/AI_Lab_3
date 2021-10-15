@@ -5,22 +5,22 @@
 Game::Game() :
 	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "AI_Lab_3" },
 	m_exitGame{ false },
-	m_player(0.0f,35.0f,90.0f * (3.14 / 180.0f),0.0f,"ASSETS//IMAGES//ship1.png", new InputBehaviour(), nullptr)
+	m_player(0.0f,10.0f,90.0f * (3.14 / 180.0f),0.0f,"ASSETS//IMAGES//ship1.png", new InputBehaviour(), nullptr)
 {
 	if (!m_font.loadFromFile("ASSETS//FONTS//ariblk.ttf")) std::cout << "error loading font for text box" << std::endl;
-	m_npcs.push_back(Character(0.01f, 45.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new ArriveBehaviour(),
+	m_npcs.push_back(Character(100.0f, 10.0f, 45.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new ArriveBehaviour(),
 		&m_font, &m_player, sf::Vector2f(100, 200),150,
 		"Arrive Slow", false));
-	m_npcs.push_back(Character(0.01f, 90.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new ArriveBehaviour(),
+	m_npcs.push_back(Character(400.0f, 20.0f, 45.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new ArriveBehaviour(),
 		&m_font, &m_player, sf::Vector2f(100, 300),350,
 		"Arrive Fast", false));
-	m_npcs.push_back(Character(70.0f, 35.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new WanderBehaviour(&m_player),
+	m_npcs.push_back(Character(200.0f, 10.0f, 90.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new WanderBehaviour(&m_player),
 		&m_font, &m_player, sf::Vector2f(100, 400),400,
 		"Wander", false));
-	m_npcs.push_back(Character(70.0f, 85.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new SeekBehaviour(),
+	m_npcs.push_back(Character(70.0f, 10.0f, 180.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new SeekBehaviour(),
 		&m_font, &m_player, sf::Vector2f(100, 500),400,
 		"Seek", false));
-	m_npcs.push_back(Character(35.0f, 60.0f, 120.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new PursueBehaviour(),
+	m_npcs.push_back(Character(35.0f, 10.0f, 180.0f * (3.14 / 180.0f), 0.0f, "ASSETS//IMAGES//ship4.png", new PursueBehaviour(),
 		&m_font, &m_player, sf::Vector2f(100, 600),400,
 		"Pursue", false));
 }

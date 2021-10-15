@@ -23,7 +23,8 @@ Character::Character(float t_speed,
 	m_visionConeColour(sf::Color::Red),
 	m_isEnabled(t_isEnabled),
 	m_heading(0),
-	m_visionConeDistance(200)
+	m_visionConeDistance(200),
+	m_originalMaxSpeed(t_maximumSpeed)
 {
 	m_position = t_position;
 	initialiseSprite(t_texturePath);

@@ -11,7 +11,7 @@ class WanderBehaviour :
     float m_targetCircleRadius;
     sf::Vector2f m_targetPosition;
 private:
-    void pickNewTravelTarget();
+    void pickNewTravelTarget(Character* t_character);
 public:
     void update(Character* t_character, float t_deltaTime);
     WanderBehaviour(Character* t_targetCharacter);
